@@ -1,0 +1,13 @@
+keycloak.auth-server-url=http://localhost:8081
+keycloak.realm=master
+keycloak.resource=vivi
+keycloak.credentials.secret=***REMOVED***
+keycloak.bearer-only=true
+  
+  # Spring Security Adapter
+keycloak.ssl-required=external
+keycloak.public-client=false
+keycloak.use-resource-role-mappings=true
+  
+  # Session Management
+server.port=8081
