@@ -1,4 +1,5 @@
 package com.vermeg.sinistpro.model;
 
-public class ClaimStatus {
+public enum ClaimStatus {
+    PENDING, UNDER_REVIEW, APPROVED, REJECTED
 }

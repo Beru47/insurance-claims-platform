@@ -1,13 +1,25 @@
-keycloak.auth-server-url=http://localhost:8081
-keycloak.realm=master
-keycloak.resource=vivi
-keycloak.credentials.secret=***REMOVED***
-keycloak.bearer-only=true
-  
-  # Spring Security Adapter
-keycloak.ssl-required=external
-keycloak.public-client=false
-keycloak.use-resource-role-mappings=true
-  
-  # Session Management
-server.port=8081
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/sinistre_pro
+    username: postgres
+    password: ***REMOVED***
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  # Disable security completely
+  security:
+    enabled: false
+
+  # Disable Kafka auto-configuration
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
