@@ -1,27 +1,25 @@
-package com.vermeg.sinistpro.controller;
+/*package com.vermeg.sinistpro.controller;
 
-import com.vermeg.sinistpro.model.ClaimRequest;
-import com.vermeg.sinistpro.model.Sinistre;
-import com.vermeg.sinistpro.service.SinistreService;
+import com.vermeg.sinistpro.model.Assure;
+import com.vermeg.sinistpro.service.AssureService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/claims")
+@RequestMapping("/api/assures")
 public class AssureController {
-    private final SinistreService sinistreService;
+    private final AssureService assureService;
 
-    public AssureController(SinistreService sinistreService) {
-        this.sinistreService = sinistreService;
+    public AssureController(AssureService assureService) {
+        this.assureService = assureService;
     }
 
     @PostMapping
-    public ResponseEntity<Sinistre> déclarerSinistre(@RequestBody ClaimRequest request) {
-        return ResponseEntity.ok(sinistreService.créerSinistre(request));
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Sinistre> consulterStatut(@PathVariable Long id) {
-        return ResponseEntity.ok(sinistreService.consulterStatut(id));
+    public ResponseEntity<Assure> createAssure(@RequestBody Assure assure) {
+        return ResponseEntity.ok(assureService.createAssure(assure));
     }
 }
+*/

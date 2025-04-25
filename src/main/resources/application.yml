@@ -2,24 +2,43 @@ server:
   port: 8081
 
 spring:
-  datasource:
+
+  datasource: #Configures the database connection
     url: jdbc:postgresql://localhost:5433/sinistre_pro
     username: postgres
     password: ***REMOVED***
     driver-class-name: org.postgresql.Driver
+    # JWT Configuration
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop  #Configures Hibernate to automatically update the database schema based on your entity definitions. This is useful during development but might not be suitable for production environments where schema migrations should be managed more carefully.
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        show_sql: true # Logs SQL statements
+        format_sql: true # Formats SQL for readability
+        hbm2ddl.auto: create-drop #  Reinforces schema recreation
 
   # Disable security completely
   security:
-    enabled: false
+    enabled: true
+
+jwt:
+  secret: "***REMOVED***"
+  expiration: 86400000  # 24 hours in milliseconds (optional)
+
+sinistre:
+  secret-key: ***REMOVED***
 
   # Disable Kafka auto-configuration
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
+
+  #Logging configuration
+logging:
+  level:
+    org.hibernate.SQL: DEBUG # Show SQL statements
+    org.hibernate.type.descriptor.sql: TRACE # Show parameter bindings
+    org.springframework: INFO # General Spring logs

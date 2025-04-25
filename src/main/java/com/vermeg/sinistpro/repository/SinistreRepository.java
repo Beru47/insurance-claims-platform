@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface SinistreRepository extends JpaRepository<Sinistre, Long> {
@@ -25,7 +26,23 @@ public interface SinistreRepository extends JpaRepository<Sinistre, Long> {
     // Find high-priority sinistres (e.g., score > threshold)
     @Query("SELECT s FROM Sinistre s WHERE s.priorityScore > :score")
     List<Sinistre> findHighPrioritySinistres(int score);
+
+  /*  @Query("SELECT COUNT(s) FROM Sinistre s WHERE s.assure.id = :assureId")
+    long countByAssureId(Long assureId);
+
+    @Query("SELECT s FROM Sinistre s WHERE s.assure.id = :assureId")
+    List<Sinistre> findByAssureId(Long assureId);*/
+
+    Optional<Sinistre> findByNumeroSinistre(String numeroSinistre);
+
+    List<Sinistre> findByPolicyClientId(Long clientId);
+
+    // Find the most recent sinistres, ordered by date descending
+    List<Sinistre> findTop5ByOrderByDateDesc();
+
+
 }
+
 
 
 /*@Repository

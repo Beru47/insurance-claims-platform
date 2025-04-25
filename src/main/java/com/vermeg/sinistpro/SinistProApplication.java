@@ -1,5 +1,6 @@
 package com.vermeg.sinistpro;
 
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -10,4 +11,5 @@ public class SinistProApplication {
         SpringApplication.run(SinistProApplication.class, args);  // Bootstraps the Spring Boot application
         System.out.println("✅ SinistPro Application is running!");
     }
+    
 }

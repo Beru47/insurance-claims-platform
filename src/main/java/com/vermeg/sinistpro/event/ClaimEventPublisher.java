@@ -1,4 +1,4 @@
-package com.vermeg.sinistpro.event;
+/*package com.vermeg.sinistpro.event;
 
 import com.vermeg.sinistpro.model.Sinistre;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -15,4 +15,4 @@ public class ClaimEventPublisher {
     public void publierÉvénement(Sinistre sinistre) {
         kafkaTemplate.send("sinistre-events", sinistre);
     }
-}
+}*/
