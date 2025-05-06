@@ -2,12 +2,113 @@ package com.vermeg.sinistpro.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.Data;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Data
+public class Sinistre {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String type;
+    private LocalDateTime date;
+    private String lieu;
+    private String description;
+    private Double fraudScore = 0.0;
+
+    @Enumerated(EnumType.STRING)
+    private ClaimStatus status;
+
+    private Integer priorityScore;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "policy_id")
+    @JsonBackReference
+    private Policy policy;
+
+    @ManyToOne
+    @JoinColumn(name = "expert_id")
+    private Expert expert;
+
+    @ManyToOne
+    @JoinColumn(name = "admin_id")
+    private Admin admin;
+
+    private BigDecimal montantIndemnisation;
+
+    @Column(unique = true)
+    private String numeroSinistre;
+
+    // Vehicle-specific fields
+    private String vehicleType;
+    private String vehicleMake;
+    private String vehicleModel;
+    private String vehicleYear;
+    private String vin;
+    private String accidentType;
+    private Boolean thirdPartyInvolved;
+    private String policeReportNumber;
+
+    // Home-specific fields
+    private String propertyAddress;
+    private String damageType;
+    private String damageExtent;
+    @ElementCollection
+    private List<String> affectedAreas;
+    private Boolean emergencyServicesCalled;
+
+    // Health-specific fields
+    private String medicalCondition;
+    private String treatmentLocation;
+    private LocalDateTime treatmentDate;
+    private String doctorName;
+    private Double medicalBillAmount;
+    private Boolean hospitalizationRequired;
+
+    // Property-specific fields
+    private String propertyType;
+    private String incidentCause;
+    private String propertyDamageDescription;
+    private Double estimatedLossValue;
+    private Boolean businessInterruption;
+
+    // Media references
+    @OneToMany(mappedBy = "sinistre", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MediaReference> mediaReferences = new ArrayList<>();
+
+    public void autoUpdateStatus() {
+        if (this.fraudScore > 0.7) {
+            this.status = ClaimStatus.SUSPECTED_FRAUD;
+        } else if (this.priorityScore >= 80) {
+            this.status = ClaimStatus.URGENT;
+        } else {
+            this.status = ClaimStatus.PENDING;
+        }
+    }
+
+    public BigDecimal calculerMontantIndemnisation() {
+        return BigDecimal.ZERO; // To be implemented by IndemnificationService
+    }
+}
+
+
+/*package com.vermeg.sinistpro.model;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -31,7 +132,7 @@ public class Sinistre {
      @JoinColumn(name = "assure_id") // Explicit foreign key
      private Assure assure;
 
-     */
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "policy_id")
     @JsonBackReference
@@ -49,10 +150,50 @@ public class Sinistre {
     @Column(unique = true)
     private String numeroSinistre;
 
+    // Vehicle-specific fields
+    private String vehicleType;
+    private String vehicleMake;
+    private String vehicleModel;
+    private String vehicleYear;
+    private String vin;
+    private String accidentType;
+    private Boolean thirdPartyInvolved;
+    private String policeReportNumber;
+
+    // Home-specific fields
+    private String propertyAddress;
+    private String damageType;
+    private String damageExtent;
+    @ElementCollection
+    private List<String> affectedAreas;
+    private Boolean emergencyServicesCalled;
+
+    // Health-specific fields
+    private String medicalCondition;
+    private String treatmentLocation;
+    private LocalDateTime treatmentDate;
+    private String doctorName;
+    private Double medicalBillAmount;
+    private Boolean hospitalizationRequired;
+
+    // Property-specific fields
+    private String propertyType;
+    private String incidentCause;
+    private String propertyDamageDescription;
+    private Double estimatedLossValue;
+    private Boolean businessInterruption;
+
+    // Media references
+    @OneToMany(mappedBy = "sinistre", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MediaReference> mediaReferences = new ArrayList<>();
+
+
+
+
     /*@ManyToOne
     private Assure assure;  // Assure associated with the Sinistre
     @ManyToOne
-    private Expert expert;  // Expert associated with the Sinister.*/
+    private Expert expert;  // Expert associated with the Sinister.
 
     // Corrected Constructor
     public Sinistre(String type, LocalDateTime date, String lieu, String description, ClaimStatus claimStatus, int priority, Policy policy) {
@@ -131,4 +272,4 @@ public class Sinistre {
     }
 
 
-}
+}*/

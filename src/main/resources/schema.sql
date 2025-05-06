@@ -60,18 +60,42 @@ CREATE TABLE IF NOT EXISTS admins (
     );
 
 CREATE TABLE IF NOT EXISTS sinistres (
-                                         id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                         id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
                                          type VARCHAR(255),
-    date DATETIME,
+    date TIMESTAMP,
     lieu VARCHAR(255),
-    description VARCHAR(255),
-    status VARCHAR(255),
-    priority_score INT,
+    description TEXT,
+    fraud_score DOUBLE PRECISION DEFAULT 0.0,
+    status VARCHAR(50),
+    priority_score INTEGER,
     policy_id BIGINT,
     expert_id BIGINT,
     admin_id BIGINT,
-    montant_indemnisation DECIMAL(19,2),
+    montant_indemnisation DECIMAL,
     numero_sinistre VARCHAR(255) UNIQUE,
+    vehicle_type VARCHAR(255),
+    vehicle_make VARCHAR(255),
+    vehicle_model VARCHAR(255),
+    vehicle_year VARCHAR(255),
+    vin VARCHAR(255),
+    accident_type VARCHAR(255),
+    third_party_involved BOOLEAN,
+    police_report_number VARCHAR(255),
+    property_address VARCHAR(255),
+    damage_type VARCHAR(255),
+    damage_extent VARCHAR(255),
+    emergency_services_called BOOLEAN,
+    medical_condition VARCHAR(255),
+    treatment_location VARCHAR(255),
+    treatment_date TIMESTAMP,
+    doctor_name VARCHAR(255),
+    medical_bill_amount DOUBLE PRECISION,
+    hospitalization_required BOOLEAN,
+    property_type VARCHAR(255),
+    incident_cause VARCHAR(255),
+    property_damage_description TEXT,
+    estimated_loss_value DOUBLE PRECISION,
+    business_interruption BOOLEAN,
     FOREIGN KEY (policy_id) REFERENCES policies(id),
     FOREIGN KEY (expert_id) REFERENCES experts(id),
     FOREIGN KEY (admin_id) REFERENCES admins(id)
@@ -85,3 +109,16 @@ CREATE TABLE IF NOT EXISTS roles (
 INSERT INTO roles (name) VALUES ('ROLE_CLIENT') ON CONFLICT (name) DO NOTHING;
 INSERT INTO roles (name) VALUES ('ROLE_ADMIN') ON CONFLICT (name) DO NOTHING;
 INSERT INTO roles (name) VALUES ('ROLE_EXPERT') ON CONFLICT (name) DO NOTHING;
+
+CREATE TABLE IF NOT EXISTS media_references (
+                                                id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+                                                file_path VARCHAR(255) NOT NULL,
+    file_type VARCHAR(50) NOT NULL,
+    sinistre_id BIGINT,
+    FOREIGN KEY (sinistre_id) REFERENCES sinistres(id) ON DELETE CASCADE
+
+    CREATE TABLE IF NOT EXISTS sinistre_affected_areas (
+                                                           sinistre_id BIGINT,
+                                                           affected_area VARCHAR(255),
+    FOREIGN KEY (sinistre_id) REFERENCES sinistres(id)
+    );
