@@ -1,4 +1,12 @@
 package com.vermeg.sinistpro.exception;
 
-public class GlobalExceptionHandler {
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public class GlobalExceptionHandler extends RuntimeException {
+
+    public GlobalExceptionHandler(String message) {
+        super(message);
+    }
 }

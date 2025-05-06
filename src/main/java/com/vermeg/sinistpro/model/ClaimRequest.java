@@ -1,6 +1,6 @@
 package com.vermeg.sinistpro.model;
 
-import lombok.Data;
+/*mport lombok.Data;
 
 import java.time.LocalDate;
 
@@ -10,4 +10,6 @@ public class ClaimRequest {
     private LocalDate date;
     private String lieu;
     private String description;
-}
+
+
+}*/

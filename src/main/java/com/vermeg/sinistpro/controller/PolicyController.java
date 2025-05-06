@@ -18,4 +18,9 @@ public class PolicyController {
     public ResponseEntity<Policy> createPolicy(@RequestBody Policy policy, @PathVariable Long clientId) {
         return ResponseEntity.ok(policyService.createPolicy(policy, clientId));
     }
+
+    @GetMapping("/{policyId}")
+    public ResponseEntity<Policy> getPolicy(@PathVariable Long policyId) {
+        return ResponseEntity.ok(policyService.getPolicy(policyId));
+    }
 }
