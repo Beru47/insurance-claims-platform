@@ -1,73 +1,37 @@
 package com.vermeg.sinistpro.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
-import java.util.List;
-
+@Data
 @Entity
-
+@Table(name = "experts")
 public class Expert {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "expert_id_seq")
+    @SequenceGenerator(name = "expert_id_seq", sequenceName = "expert_id_seq", allocationSize = 1)
     private Long id;
-    private String nom;
-    private String specialite;
-    private String contact;
 
+    private String nom;
+    private String specialite; // e.g., vehicle, home, health, property
+    private String contact;
+    private String location; // e.g., Tunis, Sfax
+
+    // Transient field to calculate workload (not persisted)
+    @Transient
+    private int workload;
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    // Fix: Add @OneToMany relationship
-    @OneToMany(mappedBy = "expert")  // "expert" refers to the field in Sinistre
-    private List<Sinistre> sinistresAttributs;
-
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNom() {
-        return nom;
-    }
-
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
-    public String getSpecialite() {
-        return specialite;
-    }
-
-    public void setSpecialite(String specialite) {
-        this.specialite = specialite;
-    }
-
-    public String getContact() {
-        return contact;
-    }
-
-    public void setContact(String contact) {
-        this.contact = contact;
-    }
-
-    public List<Sinistre> getSinistresAttributs() {
-        return sinistresAttributs;
-    }
-
-    public void setSinistresAttributs(List<Sinistre> sinistresAttributs) {
-        this.sinistresAttributs = sinistresAttributs;
-    }
-
-    public User getUser() {
-        return user;
+    // Method to set workload based on assigned claims
+    public void setWorkload(int activeClaims, int totalPriorityScore) {
+        this.workload = activeClaims * 10 + totalPriorityScore / 10;
     }
 
     public void setUser(User user) {
         this.user = user;
     }
 }
+
+

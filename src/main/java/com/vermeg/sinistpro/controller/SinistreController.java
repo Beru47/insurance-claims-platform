@@ -23,7 +23,7 @@ public class SinistreController {
     public SinistreController(SinistreService sinistreService) {
         this.sinistreService = sinistreService;
     }
-
+    
     @PostMapping("/declare")
     public ResponseEntity<Sinistre> declareSinistre(
             @RequestPart(value = "request") SinistreRequest request,
