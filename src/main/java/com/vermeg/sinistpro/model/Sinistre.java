@@ -94,6 +94,10 @@ public class Sinistre {
     public BigDecimal calculerMontantIndemnisation() {
         return BigDecimal.ZERO; // To be implemented by IndemnificationService
     }
+
+    public BigDecimal getMontantIndemnisation() {
+        return montantIndemnisation;
+    }
 }
 
 

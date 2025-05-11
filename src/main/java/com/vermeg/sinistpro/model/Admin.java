@@ -1,75 +1,49 @@
 package com.vermeg.sinistpro.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
-import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @Entity
+@Table(name = "admins")
 public class Admin {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Name is mandatory")
+    @Column(nullable = false)
     private String nom;
+
+    @NotBlank(message = "Contact is mandatory")
+    @Pattern(regexp = "^\\+?[1-9]\\d{1,14}$", message = "Invalid phone number format")
+    @Column(nullable = false)
     private String contact;
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "admin")
-    private List<Sinistre> sinistres;
+    @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL)
+    private List<Sinistre> sinistres = new ArrayList<>();
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
 
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
+    @Column
+    private LocalDateTime lastLogin;
 
-    public void setContact(String contact) {
-        this.contact = contact;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public void setSinistres(List<Sinistre> sinistres) {
-        this.sinistres = sinistres;
-    }
-
-    public void superviserTraitementSinistres(Sinistre sinistre) {
-        sinistre.autoUpdateStatus();
-    }
-
-    public void genererRapportSinistres() {
-        for (Sinistre sinistre : sinistres) {
-            System.out.println("Claim ID: " + sinistre.getId() + ", Status: " + sinistre.getStatus());
-        }
-    }
-
-    public void attribuerExpert(Sinistre sinistre, Expert expert) {
-        sinistre.setExpert(expert);
-    }
-
-    public void gererDetectionFraude(Sinistre sinistre) {
-        // TODO: Implement fraud detection logic
-    }
-
-    public BigDecimal calculerCoutTotalSinistres() {
-        BigDecimal totalCost = BigDecimal.ZERO;
-        for (Sinistre sinistre : sinistres) {
-            totalCost = totalCost.add(sinistre.calculerMontantIndemnisation());
-        }
-        return totalCost;
-    }
-
-    public void superviserOptimisationProcessus() {
-        // TODO: Implement logic to optimize claim processing
-    }
+    @ElementCollection
+    @CollectionTable(name = "admin_audit_trail", joinColumns = @JoinColumn(name = "admin_id"))
+    @Column(name = "audit_entry")
+    private List<String> auditTrail = new ArrayList<>();
 }
