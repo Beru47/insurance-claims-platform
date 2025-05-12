@@ -19,7 +19,6 @@ public class DashboardService {
 
     public DashboardDTO getDashboardData() {
         DashboardDTO dashboardDTO = new DashboardDTO();
-
         // Total sinistres
         long totalSinistres = sinistreRepository.count();
         dashboardDTO.setTotalSinistres(totalSinistres);
