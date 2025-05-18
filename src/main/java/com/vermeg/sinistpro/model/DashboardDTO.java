@@ -6,6 +6,10 @@ public class DashboardDTO {
     private long totalSinistres;
     private long pendingSinistres;
     private List<SinistreDTO> recentSinistres;
+    private String lieu;
+    private String status;
+    private String accidentType;
+    private String numeroSinistre;
 
     // Getters and Setters
     public long getTotalSinistres() {

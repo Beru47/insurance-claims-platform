@@ -1,4 +1,4 @@
-package com.vermeg.sinistpro.service;
+/*package com.vermeg.sinistpro.service;
 
 import com.vermeg.sinistpro.model.Policy;
 import com.vermeg.sinistpro.model.Sinistre;
@@ -32,7 +32,7 @@ public class IndemnificationService {
         BigDecimal baseAmount = BigDecimal.ZERO;
 
         if (policy.isValid() && policy.getGuarantees().stream()
-                .anyMatch(g -> g.toLowerCase().contains(sinistre.getType().toLowerCase()))) {
+                .anyMatch(g -> g.contains(sinistre.getType().toLowerCase()))) {
             switch (sinistre.getType().toLowerCase()) {
                 case "incendie":
                     baseAmount = BigDecimal.valueOf(5000);
@@ -65,7 +65,7 @@ public class IndemnificationService {
         BigDecimal maxPayout = sinistre.getPriorityScore() >= 80 ? BigDecimal.valueOf(15000) : BigDecimal.valueOf(10000);
         return amount.compareTo(maxPayout) > 0 ? maxPayout : amount;
     }
-}
+}*/
 
 
 

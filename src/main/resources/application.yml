@@ -41,4 +41,4 @@ logging:
   level:
     org.hibernate.SQL: DEBUG # Show SQL statements
     org.hibernate.type.descriptor.sql: TRACE # Show parameter bindings
-    org.springframework: INFO # General Spring logs
+    org.springframework: INFO # General Spring logsz

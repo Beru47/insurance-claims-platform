@@ -1,4 +1,4 @@
-package com.vermeg.sinistpro.controller;
+/*package com.vermeg.sinistpro.controller;
 
 import com.vermeg.sinistpro.model.Sinistre;
 import com.vermeg.sinistpro.service.IndemnificationService;
@@ -22,4 +22,4 @@ public class IndemnisationController {
         Sinistre sinistre = indemnificationService.calculateIndemnity(sinistreId);
         return ResponseEntity.ok(sinistre);
     }
-}
+}*/

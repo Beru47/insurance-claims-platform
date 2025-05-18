@@ -6,6 +6,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -17,10 +19,12 @@ import java.util.Collections;
 
 public class JwtFilter extends OncePerRequestFilter {
 
+    private static final Logger logger = LoggerFactory.getLogger(JwtFilter.class);
     private final JwtUtil jwtUtil;
 
     public JwtFilter(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
+        logger.info("JwtFilter initialized");
     }
 
     @Override
@@ -29,17 +33,31 @@ public class JwtFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
+        logger.info("Processing request for URI: {}", request.getRequestURI());
         String token = extractToken(request);
-        if (token != null && jwtUtil.validateToken(token)) {
-            Claims claims = jwtUtil.parseToken(token);
+        if (token != null) {
+            logger.info("Token extracted: {}", token);
+            try {
+                if (jwtUtil.validateToken(token)) {
+                    Claims claims = jwtUtil.parseToken(token);
+                    String clientId = claims.getSubject();
+                    logger.info("Validated token, clientId from sub: {}", clientId);
 
-            // Create authentication token and set security context
-            User user = new User(claims.getSubject(), "", Collections.emptyList());
-            UsernamePasswordAuthenticationToken authToken =
-                    new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                    User user = new User(clientId, "", Collections.emptyList());
+                    UsernamePasswordAuthenticationToken authToken =
+                            new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 
-            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authToken);
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                    logger.info("Authentication context set with clientId: {}", clientId);
+                } else {
+                    logger.warn("Token validation failed for token: {}", token);
+                }
+            } catch (Exception e) {
+                logger.error("Error processing token: {}", e.getMessage(), e);
+            }
+        } else {
+            logger.warn("No token found in Authorization header");
         }
 
         filterChain.doFilter(request, response);
@@ -49,7 +67,6 @@ public class JwtFilter extends OncePerRequestFilter {
         String bearerToken = request.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
-            
         }
         return null;
     }

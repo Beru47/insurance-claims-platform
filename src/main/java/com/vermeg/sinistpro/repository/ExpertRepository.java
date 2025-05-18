@@ -1,18 +1,61 @@
 package com.vermeg.sinistpro.repository;
 
 import com.vermeg.sinistpro.model.Expert;
+import com.vermeg.sinistpro.model.Expert.Specialite;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
+
+@Repository
+public interface ExpertRepository extends JpaRepository<Expert, Long> {
+    @Query("SELECT e FROM Expert e JOIN e.user u JOIN u.roles r WHERE r.name = 'ROLE_EXPERT'")
+    List<Expert> findAllWithExpertRole();
+
+    Optional<Expert> findByUserId(Long userId);
+
+    List<Expert> findBySpecialite(Specialite specialite);
+
+    @Query("SELECT e FROM Expert e JOIN e.user u JOIN u.roles r WHERE e.specialite = :specialite AND r.name = 'ROLE_EXPERT'")
+    List<Expert> findBySpecialiteAndExpertRole(@Param("specialite") Specialite specialite);
+
+    @Query("SELECT e FROM Expert e JOIN e.user u JOIN u.roles r WHERE e.location = :location AND r.name = 'ROLE_EXPERT'")
+    List<Expert> findByLocationAndExpertRole(@Param("location") String location);
+
+    @Query("SELECT e.specialite, COUNT(e) FROM Expert e GROUP BY e.specialite")
+    List<Object[]> countExpertsBySpecialite();
+
+    @Query("SELECT e.location, COUNT(e) FROM Expert e GROUP BY e.location")
+    List<Object[]> countExpertsByLocation();
+
+    @Query("SELECT e FROM Expert e JOIN e.user u JOIN u.roles r WHERE r.name = 'ROLE_EXPERT' ORDER BY e.id")
+    List<Expert> findAllExpertsForWorkloadCalculation();
+}
+
+
+/*package com.vermeg.sinistpro.repository;
+
+import com.vermeg.sinistpro.model.Expert;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ExpertRepository extends JpaRepository<Expert, Long> {
     // Find all experts with the EXPERT role
     @Query("SELECT e FROM Expert e JOIN e.user u JOIN u.roles r WHERE r.name = 'ROLE_EXPERT'")
     List<Expert> findAllWithExpertRole();
+
+
+    Optional<Expert> findByUserId(Long userId);
+
 
     // Find experts by specialization
     List<Expert> findBySpecialite(String specialite);
@@ -39,4 +82,4 @@ public interface ExpertRepository extends JpaRepository<Expert, Long> {
     @Query("SELECT e FROM Expert e JOIN e.user u JOIN u.roles r WHERE r.name = 'ROLE_EXPERT' " +
             "ORDER BY e.id")
     List<Expert> findAllExpertsForWorkloadCalculation();
-}
+}*/

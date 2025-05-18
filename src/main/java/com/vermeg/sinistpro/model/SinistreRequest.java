@@ -10,6 +10,29 @@ import java.util.List;
 public class SinistreRequest {
     private String type;
     private LocalDateTime date;
+    private String lieu; // For Google Maps address or coordinates
+    private String description;
+    private Long policyId;
+    private List<MultipartFile> mediaFiles;
+    private String accidentType;
+    private Boolean thirdPartyInvolved;
+    private String policeReportNumber;
+    
+}
+
+
+/*package com.vermeg.sinistpro.model;
+
+import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Data
+public class SinistreRequest {
+    private String type;
+    private LocalDateTime date;
     private String lieu;
     private String description;
     private Long policyId;
@@ -48,7 +71,7 @@ public class SinistreRequest {
     private Boolean businessInterruption;
 
     // Getters and Setters (already handled by @Data)
-}
+}*/
 
 
 /*package com.vermeg.sinistpro.model;

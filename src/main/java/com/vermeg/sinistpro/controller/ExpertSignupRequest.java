@@ -1,5 +1,6 @@
 package com.vermeg.sinistpro.controller;
 
+import com.vermeg.sinistpro.model.Expert.Specialite;
 import jakarta.validation.constraints.Pattern;
 
 public class ExpertSignupRequest {
@@ -10,14 +11,13 @@ public class ExpertSignupRequest {
     private String cin;
     private String nom;
     private String prenom;
-    private String dateNaissance; // ISO 8601 format: "YYYY-MM-DD"
+    private String dateNaissance;
     private String telephone;
     private String adresse;
     private String nationalite;
     private String sexe;
-    private String specialite; // Added for experts
+    private Specialite specialite;
 
-    // Getters and setters
     public String getUsername() {
         return username;
     }
@@ -106,11 +106,11 @@ public class ExpertSignupRequest {
         this.sexe = sexe;
     }
 
-    public String getSpecialite() {
+    public Specialite getSpecialite() {
         return specialite;
     }
 
-    public void setSpecialite(String specialite) {
+    public void setSpecialite(Specialite specialite) {
         this.specialite = specialite;
     }
 }

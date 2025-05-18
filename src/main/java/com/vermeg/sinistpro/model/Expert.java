@@ -3,6 +3,47 @@ package com.vermeg.sinistpro.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+
+@Data
+@Entity
+@Table(name = "experts")
+public class Expert {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String nom;
+    @Enumerated(EnumType.STRING)
+    private Specialite specialite;// e.g., vehicle, home, health, property
+    private String contact;
+    private String location; // e.g., Tunis, Sfax
+    @Transient
+    private int workload;
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    public void setWorkload(int activeClaims, int totalPriorityScore) {
+        this.workload = activeClaims * 10 + totalPriorityScore / 10;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public enum Specialite {
+        VEHICLE, HOME, HEALTH, PROPERTY
+    }
+
+
+}
+
+
+/*package com.vermeg.sinistpro.model;
+
+import jakarta.persistence.*;
+import lombok.Data;
+
 @Data
 @Entity
 @Table(name = "experts")
@@ -32,6 +73,6 @@ public class Expert {
     public void setUser(User user) {
         this.user = user;
     }
-}
+}*/
 
 

@@ -1,10 +1,17 @@
 package com.vermeg.sinistpro.controller;
 
-class LoginResponse {
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public class LoginResponse {
+    @JsonProperty("token")
     private String token;
 
     public LoginResponse(String token) {
         this.token = token;
+    }
+
+    public LoginResponse() {
+        // Default constructor required for Jackson deserialization
     }
 
     public String getToken() {
