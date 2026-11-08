@@ -4,9 +4,9 @@ server:
 spring:
 
   datasource: #Configures the database connection
-    url: jdbc:postgresql://localhost:5433/sinistre_pro
-    username: postgres
-    password: haythoumdk80
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/sinistre_pro}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
     # JWT Configuration
 
@@ -25,11 +25,11 @@ spring:
     enabled: true
 
 jwt:
-  secret: "dGhpc2lzYXNlY3VyZWtleXRoaXNpc2FzZWN1cmVrZXl0aGlzaXNhc2VjdXJla2V5dGhpc2lzYXNlY3VyZWtleQ=="
+  secret: "${JWT_SECRET}"
   expiration: 86400000  # 24 hours in milliseconds (optional)
 
 sinistre:
-  secret-key: mySecret123
+  secret-key: ${SINISTRE_SECRET_KEY}
 
   # Disable Kafka auto-configuration
   autoconfigure:
