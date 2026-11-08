@@ -1,0 +1,15 @@
+# Local dependencies only. The app itself runs with Maven (see README).
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: sinistre_pro
+      POSTGRES_USER: ${DB_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in .env}
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
