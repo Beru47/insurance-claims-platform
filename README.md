@@ -2,24 +2,19 @@
 
 Non-life insurance claims backend: declare a claim, score its priority, assign an expert, track its status and compute the indemnity.
 
-[![CI](https://github.com/Beru47/Syst-me-de-gestion-des-sinistres-pour-assurances-non-vie-VERMEG-/actions/workflows/ci.yml/badge.svg)](https://github.com/Beru47/Syst-me-de-gestion-des-sinistres-pour-assurances-non-vie-VERMEG-/actions/workflows/ci.yml)
+[![CI](https://github.com/Beru47/insurance-claims-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/Beru47/insurance-claims-platform/actions/workflows/ci.yml)
 ![Java 17](https://img.shields.io/badge/Java-17-orange)
-![Spring Boot 3.1](https://img.shields.io/badge/Spring%20Boot-3.1.5-6DB33F)
+![Spring Boot 3.5](https://img.shields.io/badge/Spring%20Boot-3.5.16-6DB33F)
 
 ## Context
 
-Built in 2025 as my final-year project (PFE) at VERMEG, for the engineering degree in Applied Mathematics at ENSIT. The project scope was a claims management system for non-life insurance covering declaration, tracking, indemnification and fraud detection, designed around an event-driven architecture (Kafka), Kubernetes deployment, Elasticsearch indexing, Keycloak RBAC and Prometheus/Grafana monitoring.
+Built in 2025 as my final-year project (PFE) at VERMEG, for the engineering degree in Applied Mathematics at ENSIT. The project covered claims management for non-life insurance: declaration, tracking and indemnification.
 
-This repository holds the Spring Boot backend. Be aware of what is and is not in it:
+This repository holds the Spring Boot backend: claim declaration with media upload, priority scoring, expert assignment, status tracking, indemnity calculation, a dashboard and JWT-based authentication with role checks.
 
-| Area | State in this repo |
-|---|---|
-| Claim declaration, tracking, expert assignment, indemnity, dashboard, JWT auth | Implemented |
-| Kafka | Dependency and producer config/publisher classes are present but commented out |
-| Fraud detection | `ClaimStatus.SUSPECTED_FRAUD`, model and repository exist; controller, service and event publisher are empty stubs |
-| Keycloak | Dependency and a config class present; the active security is the app's own JWT with role checks |
-| Elasticsearch, MongoDB | Starters on the classpath, no indexing code in this repo |
-| Kubernetes, Prometheus, Grafana | Not part of this repository |
+### Scope of this repository
+
+This public snapshot contains the claims and indemnification core; integration modules from the internal project (Kafka events, fraud scoring, Keycloak, Elasticsearch) are not included.
 
 ## Features
 
@@ -41,37 +36,28 @@ flowchart LR
     svc["Services: claims, experts, indemnity, policies"]
     db[("PostgreSQL")]
     files["Uploaded media (local disk)"]
-    kafka["Kafka"]
-    es["Elasticsearch"]
-    kc["Keycloak"]
 
     ui --> api
     api --> sec
     sec --> svc
     svc --> db
     svc --> files
-    svc -. claim events, planned .-> kafka
-    kafka -. indexing, planned .-> es
-    sec -. RBAC target .-> kc
 ```
-
-Solid links exist in this repo, dotted links are the target design from the project scope and are not wired in the code.
 
 ## Tech stack
 
-Java 17, Spring Boot 3.1.5 (Web, Data JPA, Security, OAuth2 resource server, Mail, Validation), PostgreSQL, jjwt, Apache Commons Math (gamma distribution), Lombok, JUnit 5 and Mockito, Maven, GitHub Actions. On the classpath but unused so far: Spring Kafka, Spring Data Elasticsearch, Spring Data MongoDB, Keycloak starter, Google Maps client.
+Java 17, Spring Boot 3.5 (Web, Data JPA, Security, OAuth2 resource server, Mail, Validation), PostgreSQL, jjwt, Apache Commons Math (gamma distribution), Lombok, JUnit 5 and Mockito, Maven, GitHub Actions.
 
 ## Project structure
 
 ```
 src/main/java/com/vermeg/sinistpro
-  config/      Jackson, CORS, JWT filter, Kafka and Keycloak config
+  config/      Jackson, CORS, JWT filter
   controller/  REST controllers and request/response DTOs
   service/     Business logic (SinistreService, ExpertService, IndemnificationService, ...)
   model/       JPA entities: Sinistre, Policy, Client, Expert, Report, Meeting, Notification, ...
   repository/  Spring Data JPA repositories
   security/    SecurityConfig, JwtUtil
-  event/       Kafka publishers (commented out / stubs)
   exception/   Global exception handler
 src/main/resources/application.yml
 src/test/java  Unit tests
@@ -115,13 +101,10 @@ Configuration comes from environment variables: `DB_URL`, `DB_USERNAME`, `DB_PAS
 ./mvnw verify
 ```
 
-Unit tests (JUnit 5, Mockito) cover the indemnity rules: base amount, severity uplift, client-history adjustment, invalid policy and unknown claim. The same command runs in GitHub Actions on every push and pull request. There are no integration tests yet.
+Unit tests (JUnit 5, Mockito) cover the indemnity rules: base amount, severity uplift, client-history adjustment, invalid policy and unknown claim. The same command runs in GitHub Actions on every push and pull request.
 
-## What I would improve next
+## Roadmap
 
-- Finish the Kafka flow (claim events publisher and consumers) and index claims in Elasticsearch.
-- Implement the fraud detection service that the `SUSPECTED_FRAUD` status and the Kafka publisher stub anticipate.
-- Delegate authentication to Keycloak instead of the in-app JWT, and remove the permissive `KeycloakConfig` chain.
-- Remove commented-out duplicate code left in several classes, and fix mixed French/English naming.
-- Replace `create-drop` with Flyway migrations, make the upload directory configurable, add Testcontainers integration tests.
-- Add a Dockerfile, Kubernetes manifests and Actuator/Prometheus metrics.
+- Replace `create-drop` with Flyway migrations and make the upload directory configurable.
+- Add Testcontainers integration tests.
+- Add a Dockerfile and Actuator/Prometheus metrics.
